@@ -239,7 +239,12 @@ export default {
   computed:{
     user(){
       let user = localStorage.getItem('token')
-      return user
+      if(user){
+        return user
+      }
+      else{
+        window.location = "/"
+      }
     }
   }
 }
