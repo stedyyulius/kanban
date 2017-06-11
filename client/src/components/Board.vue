@@ -20,45 +20,100 @@
 <div class="container">
 	<div class="row item-job-list">
       <div class="col-sm-3 col-md-3 block-col block-col-1" >
-        <div class="back-log" v-for="t in tasks">
-          <p class="block-creator block-hdr">{{t.creator}}</p>
-  		    <p class="block-task block-hdr">{{t.name}}</p>
-  		    <p class="block-points block-hdr">{{t.points}}</p>
-  		    <p class="block-status block-hdr">{{t.status}}</p>
-          <button type="button" class="btn btn-primary" @click="details(t._id)">Details</button>	
+        <div class="back-log" v-for="bl in BackLogTasks">
+          <p class="block-creator block-hdr">{{bl.creator}}</p>
+  		    <p class="block-task block-hdr">{{bl.name}}</p>
+  		    <p class="block-points block-hdr">{{bl.points}}</p>
+  		    <p class="block-status block-hdr">{{bl.status}}</p>
+          <button type="button" class="btn btn-primary" @click="details(bl._id,bl.points,bl.status)">Details</button>
+          <form v-if="isEdit === bl._id">
+            <h3>Points</h3>
+            <input type="text" v-model="points" placeholder="points"><br><br>
+            <select v-model="status" v-if="isEdit === bl._id">
+              <option disabled value="">Select Category</option>
+              <option>back-log</option>
+              <option>to-do</option>
+              <option>doing</option>
+              <option>done</option>
+            </select><br><br>
+            <button type="button" class="btn btn-danger" v-if="bl.creator === user" @click="ConfirmDeleteTask('back-log-tasks',bl._id)"><span class="glyphicon glyphicon-trash"></span></button>
+            <button type="button" class="btn btn-danger" @click="cancelEdit()">X</button>
+            <button type="button" class ="btn btn-primary" @click="editTask('back-log-tasks',bl._id,bl.creator,bl.name,bl.points,bl.status)">Proceed</button>
+          </form>	
           <hr style="height:30px">
         </div>		    
-  		</div>		
-		
+  		</div>			
 		<div class="col-sm-3 col-md-3 block-col block-col-2">	    
-		    <p class="block-organization block-hdr">_core_</p>	    
-		        <ul class="block-do-action">
-		            <li class="item-block-application-id">_core_ <a href=""><i class="glyphicon glyphicon-edit"></i></a></li>
-		            <li class="item-block-module-id">admin <a href=""><i class="glyphicon glyphicon-edit"></i></a></li>
-		            <li class="item-block-class-id">user <a href=""><i class="glyphicon glyphicon-edit"></i></a></li>
-		            <li class="item-block-action-id">send_signup_emails <a href=""><i class="glyphicon glyphicon-edit"></i></a> </li>
-		        </ul>	    
+      <div class="back-log" v-for="td in ToDoTasks">
+        <p class="block-creator block-hdr">{{td.creator}}</p>
+        <p class="block-task block-hdr">{{td.name}}</p>
+        <p class="block-points block-hdr">{{td.points}}</p>
+        <p class="block-status block-hdr">{{td.status}}</p>
+        <button type="button" class="btn btn-primary" @click="details(td._id,td.points,td.status)">Details</button>
+        <form v-if="isEdit === td._id">
+          <h3>Points</h3>
+          <input type="text" v-model="points" placeholder="points"><br><br>
+          <select v-model="status" v-if="isEdit === td._id">
+            <option disabled value="">Select Category</option>
+            <option>back-log</option>
+            <option>to-do</option>
+            <option>doing</option>
+            <option>done</option>
+          </select><br><br>
+          <button type="button" class="btn btn-danger" v-if="td.creator === user" @click="ConfirmDeleteTask('to-do-tasks',td._id)"><span class="glyphicon glyphicon-trash"></span></button>
+          <button type="button" class="btn btn-danger" @click="cancelEdit()">X</button>
+          <button type="button" class ="btn btn-primary" @click="editTask('to-do-tasks',td._id,td.creator,td.name,td.points,td.status)">Proceed</button>
+        </form>		
+        <hr style="height:30px">
+      </div>		
 		</div>	
 		<div class="col-sm-3 col-md-3 block-col block-col-3">
-		    <p class="block-last-execution block-hdr">
-		        2016-11-28 14:15
-		    </p
-		    <p class="block-next-execution block-hdr">
-		        2016-11-29 14:15
-		        <a href=""><i class="glyphicon glyphicon-edit"></i></a>	        
-		    </p>	    
-		    <p class="block-recurring block-hdr">
-		        each 2 minutes
-		        <a href=""><i class="glyphicon glyphicon-edit"></i></a>
-		    </p>
+      <div class="back-log" v-for="doing in DoingTasks">
+        <p class="block-creator block-hdr">{{doing.creator}}</p>
+        <p class="block-task block-hdr">{{doing.name}}</p>
+        <p class="block-points block-hdr">{{doing.points}}</p>
+        <p class="block-status block-hdr">{{doing.status}}</p>
+        <button type="button" class="btn btn-primary" @click="details(doing._id,doing.points,doing.status)">Details</button>
+        <form v-if="isEdit === doing._id">
+          <h3>Points</h3>
+          <input type="text" v-model="points" placeholder="points"><br><br>
+          <select v-model="status">
+            <option disabled value="">Select Category</option>
+            <option>back-log</option>
+            <option>to-do</option>
+            <option>doing</option>
+            <option>done</option>
+          </select><br><br>
+          <button type="button" class="btn btn-danger" v-if="doing.creator === user" @click="ConfirmDeleteTask('doing-tasks',doing._id)"><span class="glyphicon glyphicon-trash"></span></button>
+          <button type="button" class="btn btn-danger" @click="cancelEdit()">X</button>
+          <button type="button" class ="btn btn-primary" @click="editTask('doing-tasks',doing._id,doing.creator,doing.name,doing.points,doing.status)">Proceed</button>
+        </form>		
+        <hr style="height:30px">
+      </div>		
 		</div>	
 		<div class="col-sm-3 col-md-3 block-col block-col-4">
-      <ul class="block-do-action">
-          <li class="item-block-application-id">_core_ <a href=""><i class="glyphicon glyphicon-edit"></i></a></li>
-          <li class="item-block-module-id">admin <a href=""><i class="glyphicon glyphicon-edit"></i></a></li>
-          <li class="item-block-class-id">user <a href=""><i class="glyphicon glyphicon-edit"></i></a></li>
-          <li class="item-block-action-id">send_signup_emails <a href=""><i class="glyphicon glyphicon-edit"></i></a> </li>
-      </ul>	  
+      <div class="back-log" v-for="done in DoneTasks">
+        <p class="block-creator block-hdr">{{done.creator}}</p>
+        <p class="block-task block-hdr">{{done.name}}</p>
+        <p class="block-points block-hdr">{{done.points}}</p>
+        <p class="block-status block-hdr">{{done.status}}</p>
+        <button type="button" class="btn btn-primary" @click="details(done._id,done.points,done.status)">Details</button>
+        <form v-if="isEdit === done._id">
+          <h3>Points</h3>
+          <input type="text" v-model="points" placeholder="points"><br><br>
+          <select v-model="status" v-if="isEdit === done._id">
+            <option disabled value="">Select Category</option>
+            <option>back-log</option>
+            <option>to-do</option>
+            <option>doing</option>
+            <option>done</option>
+          </select><br><br>
+          <button type="button" class="btn btn-danger" v-if="done.creator === user" @click="ConfirmDeleteTask('done-tasks',done._id)"><span class="glyphicon glyphicon-trash"></span></button>
+          <button type="button" class="btn btn-danger" @click="cancelEdit()">X</button>
+          <button type="button" class ="btn btn-primary" @click="editTask('done-tasks',done._id,done.creator,done.name,done.points,done.status)">Proceed</button>
+        </form>		
+        <hr style="height:30px">
+      </div>		 
 		</div>	
 	</div>
 </div>  
@@ -69,11 +124,15 @@
 export default {
   data(){
     return{
-      tasks: [],
+      BackLogTasks: [],
+      ToDoTasks: [],
+      DoingTasks:[],
+      DoneTasks: [],
       task: "",
       points:0,
       status: "",
-      id: ""
+      id: "",
+      isEdit: ""
     }
   },
   methods:{
@@ -93,17 +152,82 @@ export default {
         status: self.status,
         creator: user
       })        
-      alert(`${this.task} Added!`);
     },
-    listTask(){
+    listBackLog(){
       let self = this;
       self.$db.ref('back-log-tasks').on("child_added",function(data){
-        self.tasks.push(data.val())
+        self.BackLogTasks.push(data.val())
       })
+    },
+    listToDo(){
+      let self = this;
+      self.$db.ref('to-do-tasks').on("child_added",function(data){
+        self.ToDoTasks.push(data.val())
+      })
+    },
+    listDoing(){
+      let self = this;
+      self.$db.ref('doing-tasks').on("child_added",function(data){
+        self.DoingTasks.push(data.val())
+      })
+    },
+    listDone(){
+      let self = this;
+      self.$db.ref('done-tasks').on("child_added",function(data){
+        self.DoneTasks.push(data.val())
+      })
+    },
+    details(id,points,status){
+      this.isEdit = id
+      this.points = points
+      this.status = status
+    },
+    editTask(table,id,creator,name,points,status){
+      let self = this;
+      console.log(table);
+      self.$db.ref(`${self.status}-tasks`).push({
+        bang:'toyib'
+      })
+      self.$db.ref(`${self.status}-tasks`).orderByChild('bang').equalTo(`toyib`).on("child_added",function(data){
+        self.id = data.key
+      })
+      self.$db.ref(`${self.status}-tasks`).child(self.id).set({
+        _id: self.id,
+        creator: creator,
+        name: name,
+        points: self.points,
+        status: self.status
+      })
+      self.$db.ref(table).child(id).remove()
+        this.points = ""
+        this.status = ""
+        this.isEdit = ""
+    },
+    cancelEdit(){
+      this.points = ""
+      this.status = ""
+      this.isEdit = ""
+    },
+    ConfirmDeleteTask(table,id){
+      if(confirm(`Are You Sure You Want to Delete This Task?`)){
+        this.deleteTask(table,id)
+      }
+      else{
+        return false
+      }
+    },
+    deleteTask(table,id){
+      this.$db.ref(table).child(id).remove()
+      this.points = ""
+      this.status = ""
+      this.isEdit = ""
     }
   },
   created:function(){
-    this.listTask()
+    this.listBackLog()
+    this.listToDo()
+    this.listDoing()
+    this.listDone()
   },
   computed:{
     user(){
