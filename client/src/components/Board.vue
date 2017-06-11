@@ -140,6 +140,10 @@ export default {
       let self = this;
       let user = localStorage.getItem('token')
       self.$db.ref(`${category}-tasks`).push({
+        creator: creator,
+        name: name,
+        points: self.points,
+        status: self.status,
         otong:'tumbal'
       })
       self.$db.ref(`${category}-tasks`).orderByChild('otong').equalTo(`tumbal`).on("child_added",function(data){
@@ -184,8 +188,12 @@ export default {
     },
     editTask(table,id,creator,name,points,status){
       let self = this;
-      console.log(table);
+      self.$db.ref(table).child(id).remove()
       self.$db.ref(`${self.status}-tasks`).push({
+        creator: creator,
+        name: name,
+        points: self.points,
+        status: self.status,
         bang:'toyib'
       })
       self.$db.ref(`${self.status}-tasks`).orderByChild('bang').equalTo(`toyib`).on("child_added",function(data){
@@ -198,7 +206,6 @@ export default {
         points: self.points,
         status: self.status
       })
-      self.$db.ref(table).child(id).remove()
         this.points = ""
         this.status = ""
         this.isEdit = ""
