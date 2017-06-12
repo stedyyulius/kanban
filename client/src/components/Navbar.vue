@@ -1,6 +1,6 @@
 <template lang="html">
   <div>
-      <button type="button" @click="logout()">Logout</button>
+      <button type="button" v-if="isLogin === true" @click="logout()">Logout</button>
   </div>
 </template>
 
@@ -9,13 +9,20 @@ export default {
   name: 'navbar',  
   data(){
     return{
-      
+      isLogin:false
     }
   },
   methods:{
     logout(){
+      this.isLogin = false
       localStorage.clear()
       this.$router.push('/')
+    }
+  },
+  computed:{
+    user(){
+      let user = localStorage.getItem('token')
+      return user
     }
   }
 }

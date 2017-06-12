@@ -26,7 +26,7 @@
 <div class="container">
 	<div class="row item-job-list">
       <div class="col-sm-3 col-md-3 block-col block-col-1" >
-        <div class="back-log" v-for="bl in BackLogTasks">
+        <div class="back-log" v-for="(bl,index) in BackLogTasks">
           <p class="block-creator block-hdr">{{bl.creator}}</p>
   		    <p class="block-task block-hdr">{{bl.name}}</p>
           <p class="block-assign block-hdr">{{bl.assign}}</p>
@@ -43,15 +43,15 @@
               <option>doing</option>
               <option>done</option>
             </select><br><br>
-            <button type="button" class="btn btn-danger" v-if="bl.creator === user" @click="ConfirmDeleteTask('back-log-tasks',bl._id)"><span class="glyphicon glyphicon-trash"></span></button>
+            <button type="button" class="btn btn-danger" v-if="bl.creator === user" @click="ConfirmDeleteTask('back-log-tasks',bl._id,index,'BackLogTasks')"><span class="glyphicon glyphicon-trash"></span></button>
             <button type="button" class="btn btn-danger" @click="cancelEdit()">X</button>
-            <button type="button" class ="btn btn-primary" @click="editTask('back-log-tasks',bl._id,bl.creator,bl.name,bl.assign,bl.points,bl.status)">Proceed</button>
+            <button type="button" class ="btn btn-primary" @click="editTask('back-log-tasks',bl._id,bl.creator,bl.name,bl.assign,bl.points,bl.status,index,'BackLogTasks')">Proceed</button>
           </form>	
           <hr style="height:30px">
         </div>		    
   		</div>			
 		<div class="col-sm-3 col-md-3 block-col block-col-2">	    
-      <div class="back-log" v-for="td in ToDoTasks">
+      <div class="back-log" v-for="(td,index) in ToDoTasks">
         <p class="block-creator block-hdr">{{td.creator}}</p>
         <p class="block-task block-hdr">{{td.name}}</p>
         <p class="block-assign block-hdr">{{td.assign}}</p>
@@ -68,15 +68,15 @@
             <option>doing</option>
             <option>done</option>
           </select><br><br>
-          <button type="button" class="btn btn-danger" v-if="td.creator === user" @click="ConfirmDeleteTask('to-do-tasks',td._id)"><span class="glyphicon glyphicon-trash"></span></button>
+          <button type="button" class="btn btn-danger" v-if="td.creator === user" @click="ConfirmDeleteTask('to-do-tasks',td._id,index,'ToDoTasks')"><span class="glyphicon glyphicon-trash"></span></button>
           <button type="button" class="btn btn-danger" @click="cancelEdit()">X</button>
-          <button type="button" class ="btn btn-primary" @click="editTask('to-do-tasks',td._id,td.creator,td.name,td.assign,td.points,td.status)">Proceed</button>
+          <button type="button" class ="btn btn-primary" @click="editTask('to-do-tasks',td._id,td.creator,td.name,td.assign,td.points,td.status,index,'ToDoTasks')">Proceed</button>
         </form>		
         <hr style="height:30px">
       </div>		
 		</div>	
 		<div class="col-sm-3 col-md-3 block-col block-col-3">
-      <div class="back-log" v-for="doing in DoingTasks">
+      <div class="back-log" v-for="(doing,index) in DoingTasks">
         <p class="block-creator block-hdr">{{doing.creator}}</p>
         <p class="block-task block-hdr">{{doing.name}}</p>
         <p class="block-assign block-hdr">{{doing.assign}}</p>
@@ -93,15 +93,15 @@
             <option>doing</option>
             <option>done</option>
           </select><br><br>
-          <button type="button" class="btn btn-danger" v-if="doing.creator === user" @click="ConfirmDeleteTask('doing-tasks',doing._id)"><span class="glyphicon glyphicon-trash"></span></button>
+          <button type="button" class="btn btn-danger" v-if="doing.creator === user" @click="ConfirmDeleteTask('doing-tasks',doing._id,index,'DoingTasks')"><span class="glyphicon glyphicon-trash"></span></button>
           <button type="button" class="btn btn-danger" @click="cancelEdit()">X</button>
-          <button type="button" class ="btn btn-primary" @click="editTask('doing-tasks',doing._id,doing.creator,doing.name,doing.assign,doing.points,doing.status)">Proceed</button>
+          <button type="button" class ="btn btn-primary" @click="editTask('doing-tasks',doing._id,doing.creator,doing.name,doing.assign,doing.points,doing.status,index,'DoingTasks')">Proceed</button>
         </form>		
         <hr style="height:30px">
       </div>		
 		</div>	
 		<div class="col-sm-3 col-md-3 block-col block-col-4">
-      <div class="back-log" v-for="done in DoneTasks">
+      <div class="back-log" v-for="(done,index) in DoneTasks">
         <p class="block-creator block-hdr">{{done.creator}}</p>
         <p class="block-task block-hdr">{{done.name}}</p>
         <p class="block-assign block-hdr">{{done.assign}}</p>
@@ -118,9 +118,9 @@
             <option>doing</option>
             <option>done</option>
           </select><br><br>
-          <button type="button" class="btn btn-danger" v-if="done.creator === user" @click="ConfirmDeleteTask('done-tasks',done._id)"><span class="glyphicon glyphicon-trash"></span></button>
+          <button type="button" class="btn btn-danger" v-if="done.creator === user" @click="ConfirmDeleteTask('done-tasks',done._id,index,'DoneTasks')"><span class="glyphicon glyphicon-trash"></span></button>
           <button type="button" class="btn btn-danger" @click="cancelEdit()">X</button>
-          <button type="button" class ="btn btn-primary" @click="editTask('done-tasks',done._id,done.creator,done.name,done.assign,done.points,done.status)">Proceed</button>
+          <button type="button" class ="btn btn-primary" @click="editTask('done-tasks',done._id,done.creator,done.name,done.assign,done.points,done.status,index,'DoneTasks')">Proceed</button>
         </form>		
         <hr style="height:30px">
       </div>		 
@@ -151,14 +151,15 @@ export default {
     addTask(category){
       let self = this;
       let user = localStorage.getItem('token')
-      self.$db.ref(`${category}-tasks`).push({
+      let tumbal = {
         creator: user,
         name: self.task,
         assign: self.assign,
         points: self.points,
         status: self.status,
         otong:'tumbal'
-      })
+      }
+      self.$db.ref(`${category}-tasks`).push(tumbal)
       self.$db.ref(`${category}-tasks`).orderByChild('otong').equalTo(`tumbal`).on("child_added",function(data){
         self.id = data.key
       })
@@ -169,8 +170,10 @@ export default {
         points: self.points,
         status: self.status,
         creator: user
-      })
-      self.Add = false        
+      })    
+      self.Add = false
+      alert(`${self.task} Added!`)
+      location.reload()        
     },
     add(){
       this.Add = true
@@ -207,10 +210,11 @@ export default {
       this.points = points
       this.status = status
     },
-    editTask(table,id,creator,name,assign,points,status){
+    editTask(table,id,creator,name,assign,points,status,index,state){
       let self = this;
       self.$db.ref(table).child(id).remove()
       self.$db.ref(`${self.status}-tasks`).push({
+        _id: id,
         creator: creator,
         name: name,
         assign: assign,
@@ -221,14 +225,31 @@ export default {
       self.$db.ref(`${self.status}-tasks`).orderByChild('bang').equalTo(`toyib`).on("child_added",function(data){
         self.id = data.key
       })
-      self.$db.ref(`${self.status}-tasks`).child(self.id).set({
+      let newData = {  
         _id: self.id,
         creator: creator,
         name: name,
         assign: assign,
         points: self.points,
         status: self.status
+      }   
+      self.$db.ref(`${self.status}-tasks`).child(self.id).set(newData)
+
+      self.$db.ref(`${self.status}-tasks`).orderByChild('_id').equalTo(`${self.id}`).on("child_added",function(dataa){
+        self.id = dataa.key
       })
+      if(state === "DoneTasks"){
+        this.DoneTasks.splice(index,1)
+      }
+      else if (state === "DoingTasks"){
+        this.DoingTasks.splice(index,1)
+      }    
+      else if (state === "ToDoTasks"){
+        this.ToDoTasks.splice(index,1)
+      }
+      else if (state === "BackLogTasks"){
+        this.BackLogTasks.splice(index,1)
+      }
         this.points = ""
         this.status = ""
         this.isEdit = ""
@@ -238,16 +259,28 @@ export default {
       this.status = ""
       this.isEdit = ""
     },
-    ConfirmDeleteTask(table,id){
+    ConfirmDeleteTask(table,id,index,state){
       if(confirm(`Are You Sure You Want to Delete This Task?`)){
-        this.deleteTask(table,id)
+        this.deleteTask(table,id,index,state)
       }
       else{
         return false
       }
     },
-    deleteTask(table,id){
+    deleteTask(table,id,index,state){
       this.$db.ref(table).child(id).remove()
+      if(state === "DoneTasks"){
+        this.DoneTasks.splice(index,1)
+      }
+      else if (state === "DoingTasks"){
+        this.DoingTasks.splice(index,1)
+      }    
+      else if (state === "ToDoTasks"){
+        this.ToDoTasks.splice(index,1)
+      }
+      else if (state === "BackLogTasks"){
+        this.BackLogTasks.splice(index,1)
+      }
       this.points = ""
       this.status = ""
       this.isEdit = ""
